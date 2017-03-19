@@ -1,0 +1,13 @@
+.text {
+    color: white;
+    font-size: 30px;
+    vertical-align: 18px;
+    margin: 0px 10px 0px 0px;
+}
+.img {
+    height: 60px;
+    width: 60px;
+}
+.content {
+    height: 400px;
+}
