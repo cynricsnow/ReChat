@@ -1,5 +1,4 @@
 'use strict'
-
 const http = require('http');
 const express = require('express');
 const morgan = require('morgan');
@@ -45,9 +44,13 @@ if (env === 'development') {
 }
 app.use(express.static(`{__dirname}/public`));
 
-app.use('/', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(`${__dirname}/public/index.html`);
 })
+// app.use((err, req, res, next) => {
+//   res.status(500).send(err.stack);
+//   console.error(err);
+// });
 
 const server = http.createServer(app);
 server.listen(port, () => {
