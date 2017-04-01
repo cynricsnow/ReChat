@@ -8,15 +8,21 @@ import IndexPage from '../IndexPage';
 import styles from './styles';
 import logo from './header-logo.png';
 
+const user = false;
+
 class App extends Component {
     render() {
         return (
-            <Layout>
+            <Layout className={styles.layout}>
                 <Header>
                     <Link to='/' className={styles.text}>ReChat</Link>
-                    <img className={styles.img} src={logo} />
+                    <img className={styles.logo} src={logo} />
                 </Header>
-                <Content className={styles.content} />
+                <Content className={styles.content}>
+                    {
+                        user ? <p>world</p> : <IndexPage />
+                    }
+                </Content>
                 <Footer />
             </Layout>
         )

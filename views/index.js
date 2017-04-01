@@ -14,14 +14,14 @@ import App from './components/App';
 import NotFoundPage from './components/NotFoundPage';
 import store from './redux/store';
 
-//import './styles.css';
+import './styles.css';
 
 const history = createBrowserHistory()
 
 const router = (
     <Provider store={store}>
         <Router history={history}>
-            <Route path='/' component={App} />
+            <Route path='/' component={App}/>
         </Router>
     </Provider>
 );
