@@ -1,6 +1,10 @@
-.layout {
-    background: transparent;
+.index {
+    background: #ececec url('./background.jpg') no-repeat center fixed / cover;
     overflow: hidden;
+    height: 100%;
+}
+
+.room {
     height: 100%;
 }
 
@@ -10,10 +14,12 @@
     vertical-align: 18px;
     margin: 0px 10px 0px 0px;
 }
+
 .logo {
     height: 60px;
     width: 60px;
 }
+
 .content {
     margin-top: 10px;
     height: 100%;

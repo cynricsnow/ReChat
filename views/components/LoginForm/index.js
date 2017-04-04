@@ -9,12 +9,12 @@ import logo from './login-logo.png';
 class LoginForm extends Component {
     handleSubmit(e) {
         e.preventDefault();
-        console.log('hhh');
+        console.log(this.props.form.getFieldsValue());
     }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit.bind(this)}>
                 <Row className={styles.header}>
                     <Col span={8}>
                         <img className={styles.logo} src={logo} />

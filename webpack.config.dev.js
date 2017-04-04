@@ -25,8 +25,8 @@ module.exports = {
                     {
                         loader: 'babel-loader',
                         options: {
-                            presets: ['es2015', 'react'],
-                            plugins: [['import', { libraryName: 'antd', style: 'css' }]]
+                            presets: ['es2015', 'react', 'stage-0'],
+                            plugins: ['transform-decorators-legacy', ['import', { libraryName: 'antd', style: 'css' }]]
                         }
                     }
                 ]

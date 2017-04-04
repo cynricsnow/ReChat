@@ -1,20 +1,29 @@
 'use strict'
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Row, Col, Form, Icon, Input, Button } from 'antd';
 const FormItem = Form.Item;
 
+import { register } from '../../redux/actions/account';
 import styles from '../LoginRegisterForm/styles';
 import logo from './register-logo.png';
 
+@connect(
+    null,
+    dispatch => ({
+        handleSubmit(e) {
+            e.preventDefault();
+            console.log(this.props.form.getFieldsValue());
+            dispatch(register(this.props.form.getFieldsValue()));
+        }
+    })
+)
 class RegisterForm extends Component {
-    handleSubmit(e) {
-        e.preventDefault();
-        console.log('???');
-    }
     render() {
+        const { handleSubmit } = this.props;
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form onSubmit={handleSubmit.bind(this)}>
                 <Row className={styles.header}>
                     <Col span={8}>
                         <img className={styles.logo} src={logo} />
@@ -56,6 +65,9 @@ class RegisterForm extends Component {
                             rules: [{
                                 required: true,
                                 message: '请输入密码'
+                            }, {
+                                min: 6,
+                                message: '密码不能少于6个字符'
                             }]
                         })(
                             <Input prefix={<Icon type='lock' />} type='password' placeholder='密码' />
@@ -64,7 +76,7 @@ class RegisterForm extends Component {
                 </FormItem>
                 <FormItem>
                     {
-                        getFieldDecorator('checkpassword', {
+                        getFieldDecorator('confirm', {
                             rules: [{
                                 required: true,
                                 message: '请输入确认密码'

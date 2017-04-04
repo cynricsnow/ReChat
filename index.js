@@ -44,6 +44,29 @@ if (env === 'development') {
 }
 app.use(express.static(`{__dirname}/public`));
 
+app.use((req, res, next) => {
+    res.succeed = function (data) {
+        return this.json({
+            code: 0,
+            data: data
+        });
+    };
+    res.fail = function(data) {
+        return this.json({
+            code: -1,
+            error: data
+        });
+    };
+    next();
+});
+
+app.post('/api/account/register', (req, res) => {
+    console.log(req.body);
+    return res.succeed({
+        username: 'test'
+    });
+})
+
 app.get('*', (req, res) => {
     res.sendFile(`${__dirname}/public/index.html`);
 })
