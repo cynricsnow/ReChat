@@ -1,4 +1,5 @@
 'use strict'
+global.ROOT = __dirname;
 const http = require('http');
 const express = require('express');
 const morgan = require('morgan');
@@ -29,12 +30,12 @@ app.use(session({
     resave: true,
     saveUninitialized: false,
     cookie: {
-        maxAge: 60 * 1000,
+        maxAge: 30 * 60 * 1000,
         secure: false
     },
     store: sessionStore
 }))
-app.use(serveFavicon(`${__dirname}/public/logo.ico`));
+app.use(serveFavicon(`${ROOT}/public/logo.ico`));
 if (env === 'development') {
     const compiler = webpack(require('./webpack.config.dev'));
     app.use(webpackDevMidddleware(compiler, {
@@ -42,34 +43,24 @@ if (env === 'development') {
     }));
     app.use(webpackHotMiddleware(compiler));
 }
-app.use(express.static(`{__dirname}/public`));
+app.use(express.static(`${ROOT}/public`));
 
 app.use((req, res, next) => {
-    res.succeed = function (data) {
-        return this.json({
-            code: 0,
-            data: data
-        });
-    };
-    res.fail = function(data) {
-        return this.json({
-            code: -1,
-            error: data
-        });
-    };
+    res.succeed = data => res.json({
+        code: 0,
+        data
+    });
+    res.fail = error => res.json({
+        code: -1,
+        error
+    });
     next();
 });
 
-app.post('/api/account/register', (req, res) => {
-    console.log(req.body);
-    return res.succeed({
-        username: 'test'
-    });
-})
+const controllers = require('./controllers');
 
-app.get('*', (req, res) => {
-    res.sendFile(`${__dirname}/public/index.html`);
-})
+app.use(controllers);
+
 // app.use((err, req, res, next) => {
 //   res.status(500).send(err.stack);
 //   console.error(err);

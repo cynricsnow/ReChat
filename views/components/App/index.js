@@ -3,22 +3,28 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, Route } from 'react-router-dom';
 import { Layout } from 'antd';
-
 const { Header, Content, Footer } = Layout;
+
+import { validate } from '../../redux/actions/account';
 import IndexPage from '../IndexPage';
 import RoomPage from '../RoomPage';
 import styles from './styles';
 import logo from './header-logo.png';
 
-// const user = true;
-//const user = false;
-
 @connect(
     state => ({
         user: state.account.user
+    }),
+    dispatch => ({
+        validate: () => dispatch(validate())
     })
 )
 class App extends Component {
+    componentDidMount() {
+        const { validate } = this.props;
+        validate();
+        console.log(this);
+    }
     render() {
         const { user } = this.props;
         return (

@@ -24,7 +24,7 @@ const ajaxMiddlewareCreator = client => store => next => action => {
             error => next({
                 type: FAILURE,
                 ...rest,
-                result
+                error
             })
         ).catch(
             error => {
