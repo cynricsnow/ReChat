@@ -31,7 +31,7 @@ class LoginForm extends Component {
                                 message: '请输入用户名'
                             }]
                         })(
-                            <Input prefix={<Icon type='user' />} placeholder='用户名' />
+                            <Input prefix={<Icon type='user' />} placeholder='用户名' autoFocus/>
                         )
                     }
                 </FormItem>

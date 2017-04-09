@@ -19,4 +19,14 @@ router.get('/validate', (req, res) => {
     });
 })
 
+router.get('/check_username', (req, res) => {
+    console.log(req.query.username);
+    const user = null;
+    if (!user) {
+        return res.succeed();
+    } else {
+        return res.fail();
+    }
+})
+
 module.exports = router;

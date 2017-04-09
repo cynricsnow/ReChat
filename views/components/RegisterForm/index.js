@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Form, Icon, Input, Button } from 'antd';
 const FormItem = Form.Item;
 
+import ajax from '../../redux/common/ajax';
 import { register } from '../../redux/actions/account';
 import styles from '../LoginRegisterForm/styles';
 import logo from './register-logo.png';
@@ -13,15 +14,43 @@ import logo from './register-logo.png';
     dispatch => ({
         handleSubmit(e) {
             e.preventDefault();
-            console.log(this.props.form.getFieldsValue());
-            dispatch(register(this.props.form.getFieldsValue()));
+            const { validateFieldsAndScroll } = this.props.form;
+            validateFieldsAndScroll((err, values) => {
+                if (!err) {
+                    console.log(values);
+                    dispatch(register(values));
+                }
+            })
+        },
+        checkUsername(rule, value, callback) {
+            if (value && value.length >= 3) {
+                const validatePromise = ajax.get('/api/account/check_username', {
+                    username: value
+                });
+                validatePromise.then(
+                    result => {
+                        callback();
+                    },
+                    error => {
+                        callback('用户名已存在');
+                    }
+                )
+            } else {
+                callback();
+            }
+        },
+        checkEmail(rule, value, callback) {
+            console.log(rule);
+            callback();
         }
     })
 )
 class RegisterForm extends Component {
+
     render() {
-        const { handleSubmit } = this.props;
-        const { getFieldDecorator } = this.props.form;
+        const { handleSubmit, checkUsername, checkEmail } = this.props;
+        const form = this.props.form;
+        const { getFieldDecorator } = form;
         return (
             <Form onSubmit={handleSubmit.bind(this)}>
                 <Row className={styles.header}>
@@ -38,9 +67,14 @@ class RegisterForm extends Component {
                             rules: [{
                                 required: true,
                                 message: '请输入用户名'
+                            }, {
+                                min: 3,
+                                message: '用户名不得少于3个字符'
+                            }, {
+                                validator: checkUsername
                             }]
                         })(
-                            <Input prefix={<Icon type='user' />} placeholder='用户名' />
+                            <Input prefix={<Icon type='user' />} placeholder='用户名' autoFocus autoComplete='off'/>
                         )
                     }
                 </FormItem>
@@ -53,9 +87,11 @@ class RegisterForm extends Component {
                             }, {
                                 required: true,
                                 message: '请输入邮箱'
+                            }, {
+                                validator: checkEmail
                             }]
                         })(
-                            <Input prefix={<Icon type='mail' />} placeholder='邮箱' />
+                            <Input prefix={<Icon type='mail' />} placeholder='邮箱' autoComplete='off'/>
                         )
                     }
                 </FormItem>
@@ -67,7 +103,7 @@ class RegisterForm extends Component {
                                 message: '请输入密码'
                             }, {
                                 min: 6,
-                                message: '密码不能少于6个字符'
+                                message: '密码不得少于6个字符'
                             }]
                         })(
                             <Input prefix={<Icon type='lock' />} type='password' placeholder='密码' />
