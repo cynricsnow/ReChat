@@ -21,7 +21,7 @@ const sessionStore = new MongoStore(config.mongo);
 const app = express();
 
 app.use(morgan(config.morgan.format));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '200kb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(config.cookie.secret));
 app.use(session({

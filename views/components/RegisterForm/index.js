@@ -1,7 +1,7 @@
 'use strict'
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Form, Icon, Input, Button } from 'antd';
+import { Row, Col, Form, Icon, Input, Button, Upload } from 'antd';
 const FormItem = Form.Item;
 
 import ajax from '../../redux/common/ajax';
@@ -18,6 +18,7 @@ import logo from './register-logo.png';
             validateFieldsAndScroll((err, values) => {
                 if (!err) {
                     console.log(values);
+                    delete values.confirm;
                     dispatch(register(values));
                 }
             })
@@ -40,13 +41,49 @@ import logo from './register-logo.png';
             }
         },
         checkEmail(rule, value, callback) {
-            console.log(rule);
-            callback();
+            const pattern = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/
+            if (!value) {
+                callback();
+            } else if (!pattern.test(value)){
+                callback('邮箱格式不正确');
+            } else {
+                const validatePromise = ajax.get('/api/account/check_email', {
+                    email: value
+                });
+                validatePromise.then(
+                    result => {
+                        callback();
+                    },
+                    error => {
+                        callback('邮箱已被占用');
+                    }
+                )
+            }
         }
     })
 )
 class RegisterForm extends Component {
-
+    state = {
+        confirmDirty: false
+    }
+    handleConfirmBlur(e) {
+        const value = e.target.value;
+        this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+    }
+    checkPassword(rule, value, callback) {
+        const form = this.props.form;
+        if (value && this.state.confirmDirty) {
+            form.validateFields(['confirm'], { force: true });
+        }
+        callback();
+    }
+    checkConfirm(rule, value, callback) {
+        if (value && value !== this.getFieldValue('password')) {
+            callback('两次输入密码不一致');
+        } else {
+            callback();
+        }
+    }
     render() {
         const { handleSubmit, checkUsername, checkEmail } = this.props;
         const form = this.props.form;
@@ -55,7 +92,9 @@ class RegisterForm extends Component {
             <Form onSubmit={handleSubmit.bind(this)}>
                 <Row className={styles.header}>
                     <Col span={8}>
-                        <img className={styles.logo} src={logo} />
+                        <div className={styles.yellowCircle}>
+                            <img className={styles.logo} src={logo} />
+                        </div>
                     </Col>
                     <Col span={16}>
                         <h1>创建ReChat账号</h1>
@@ -82,9 +121,6 @@ class RegisterForm extends Component {
                     {
                         getFieldDecorator('email', {
                             rules: [{
-                                type: 'email',
-                                message: '邮箱格式不正确'
-                            }, {
                                 required: true,
                                 message: '请输入邮箱'
                             }, {
@@ -104,6 +140,8 @@ class RegisterForm extends Component {
                             }, {
                                 min: 6,
                                 message: '密码不得少于6个字符'
+                            }, {
+                                validator: this.checkPassword.bind(this)
                             }]
                         })(
                             <Input prefix={<Icon type='lock' />} type='password' placeholder='密码' />
@@ -116,9 +154,11 @@ class RegisterForm extends Component {
                             rules: [{
                                 required: true,
                                 message: '请输入确认密码'
+                            }, {
+                                validator: this.checkConfirm.bind(form)
                             }]
                         })(
-                            <Input prefix={<Icon type='lock' />} type='password' placeholder='确认密码' />
+                            <Input prefix={<Icon type='lock' />} type='password' placeholder='确认密码' onBlur={this.handleConfirmBlur.bind(this)}/>
                         )
                     }
                 </FormItem>

@@ -17,7 +17,9 @@ class LoginForm extends Component {
             <Form onSubmit={this.handleSubmit.bind(this)}>
                 <Row className={styles.header}>
                     <Col span={8}>
-                        <img className={styles.logo} src={logo} />
+                        <div className={styles.blueCircle}>
+                            <img className={styles.logo} src={logo} />
+                        </div>
                     </Col>
                     <Col span={16}>
                         <h1>开始新的聊天</h1>

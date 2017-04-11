@@ -11,9 +11,8 @@ const LOGIN = true;
 const REGISTER = false;
 
 class IndexPage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { active: LOGIN };
+    state = {
+        active: LOGIN
     }
     switchToLogin(e) {
         e.preventDefault();

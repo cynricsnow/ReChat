@@ -23,7 +23,6 @@ class App extends Component {
     componentDidMount() {
         const { validate } = this.props;
         validate();
-        console.log(this);
     }
     render() {
         const { user } = this.props;
