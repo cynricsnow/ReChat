@@ -46,7 +46,7 @@ if (env === 'development') {
 app.use(express.static(`${ROOT}/public`));
 
 app.use((req, res, next) => {
-    res.succeed = data => res.json({
+    res.success = data => res.json({
         code: 0,
         data
     });

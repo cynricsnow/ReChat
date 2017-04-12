@@ -1,12 +1,19 @@
 'use strict'
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Row, Col, Menu, Icon } from 'antd';
 const SubMenu = Menu.SubMenu;
 
 import styles from './styles';
 
+@connect(
+    state => ({
+        avatarUrl: state.account.user.avatarUrl
+    })
+)
 class RoomPage extends Component {
     render() {
+        const { avatarUrl } = this.props;
         return (
             <Row className={styles.wrapper}>
                 <Col span={6}>
@@ -29,6 +36,7 @@ class RoomPage extends Component {
                     </Menu>
                 </Col>
                 <Col span={18}>
+                    <img src={avatarUrl} />
                 </Col>
             </Row>
         )
