@@ -34,3 +34,11 @@
     font-weight: bold;
     width: 100%;
 }
+
+.hint {
+    height: 18px;
+    color: #aaa;
+    margin-top: -13px;
+    margin-bottom: -5px;
+    text-align: center;
+}

@@ -12,6 +12,11 @@ export const VALIDATE_SUCCESS = 'ReChat/account/VALIDATE_SUCCESS';
 export const VALIDATE_FAILURE = 'ReChat/account/VALIDATE_FAILURE';
 
 
+export const login = data => ({
+    types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE],
+    promise: client => client.post('/api/account/login', data)
+})
+
 export const register = data => ({
     types: [REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE],
     promise: client => client.post('/api/account/register', data)

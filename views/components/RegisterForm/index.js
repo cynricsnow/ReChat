@@ -14,7 +14,7 @@ import logo from './register-logo.png';
     dispatch => ({
         handleSubmit(e) {
             e.preventDefault();
-            const { validateFieldsAndScroll } = this.props.form;
+            const { validateFieldsAndScroll } = this;
             validateFieldsAndScroll((err, values) => {
                 if (!err) {
                     console.log(values);
@@ -24,7 +24,8 @@ import logo from './register-logo.png';
             })
         },
         checkUsername(rule, value, callback) {
-            if (value && value.length >= 3) {
+            const pattern = /^[\w\d]+$/;
+            if (value && value.length >= 3 && pattern.test(value)) {
                 const validatePromise = ajax.get('/api/account/check_username', {
                     username: value
                 });
@@ -41,7 +42,7 @@ import logo from './register-logo.png';
             }
         },
         checkEmail(rule, value, callback) {
-            const pattern = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+            const pattern = /^([\da-z_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
             if (!value) {
                 callback();
             } else if (!pattern.test(value)){
@@ -89,7 +90,7 @@ class RegisterForm extends Component {
         const form = this.props.form;
         const { getFieldDecorator } = form;
         return (
-            <Form onSubmit={handleSubmit.bind(this)}>
+            <Form onSubmit={handleSubmit.bind(form)}>
                 <Row className={styles.header}>
                     <Col span={8}>
                         <div className={styles.yellowCircle}>
@@ -109,6 +110,9 @@ class RegisterForm extends Component {
                             }, {
                                 min: 3,
                                 message: '用户名不得少于3个字符'
+                            }, {
+                                pattern: /^[\w\d]+$/,
+                                message: '用户名包含非法字符'
                             }, {
                                 validator: checkUsername
                             }]
