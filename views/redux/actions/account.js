@@ -3,6 +3,8 @@ export const LOGIN = 'ReChat/account/LOGIN';
 export const LOGIN_SUCCESS = 'ReChat/account/LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'ReChat/account/LOGIN_FAILURE';
 
+export const MESSAGE_EXPIRED = 'ReChat/account/MESSAGE_EXPIRED';
+
 export const REGISTER = 'ReChat/account/REGISTER';
 export const REGISTER_SUCCESS = 'ReChat/account/REGISTER_SUCCESS';
 export const REGISTER_FAILURE = 'ReChat/account/REGISTER_FAILURE';
@@ -15,6 +17,10 @@ export const VALIDATE_FAILURE = 'ReChat/account/VALIDATE_FAILURE';
 export const login = data => ({
     types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE],
     promise: client => client.post('/api/account/login', data)
+})
+
+export const messageExpired = () => ({
+    type: MESSAGE_EXPIRED
 })
 
 export const register = data => ({

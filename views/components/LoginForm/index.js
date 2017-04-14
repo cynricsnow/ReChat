@@ -1,10 +1,10 @@
 'use strict'
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Form, Icon, Input, Button } from 'antd';
+import { Row, Col, Form, Icon, Input, Button, AutoComplete } from 'antd';
 const FormItem = Form.Item;
 
-import { login } from '../../redux/actions/account';
+import { login, messageExpired } from '../../redux/actions/account';
 import styles from '../LoginRegisterForm/styles';
 import logo from './login-logo.png';
 
@@ -21,12 +21,50 @@ import logo from './login-logo.png';
                     dispatch(login(values));
                 }
             })
+        },
+        handleMessage() {
+            if (this) {
+                dispatch(messageExpired());
+            }
         }
     })
 )
 class LoginForm extends Component {
+    state = {
+        dataSource: [],
+        avatarUrl: logo
+    }
+    componentDidMount() {
+        let users = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key(i);
+            users.push(key);
+        }
+        this.setState({ dataSource: users});
+    }
+    updateAvatarUrl(value) {
+        const url = localStorage[value];
+        if (url && url !== value) {
+            this.setState({ avatarUrl: url});
+        }
+    }
+    onSelect(value) {
+        this.updateAvatarUrl.bind(this)(value);
+    }
+    onChange(value) {
+        const users = this.state.dataSource;
+        for (let i = 0; i < users.length; i++) {
+            if (users[i] === value) {
+                return;
+            }
+        }
+        if (this.state.avatarUrl !== logo) {
+            this.setState({ avatarUrl: logo});
+        }
+    }
     render() {
-        const { message, handleSubmit } = this.props;
+        const { dataSource, avatarUrl } = this.state;
+        const { message, handleSubmit, handleMessage } = this.props;
         const form = this.props.form;
         const { getFieldDecorator } = form;
         return (
@@ -34,7 +72,7 @@ class LoginForm extends Component {
                 <Row className={styles.header}>
                     <Col span={8}>
                         <div className={styles.blueCircle}>
-                            <img className={styles.logo} src={logo} />
+                            <img className={styles.logo} src={avatarUrl} />
                         </div>
                     </Col>
                     <Col span={16}>
@@ -49,7 +87,14 @@ class LoginForm extends Component {
                                 message: '请输入用户名/邮箱'
                             }]
                         })(
-                            <Input prefix={<Icon type='user' />} placeholder='用户名/邮箱' autoFocus/>
+                            <AutoComplete
+                                dataSource={dataSource}
+                                onSelect={this.onSelect.bind(this)}
+                                onChange={this.onChange.bind(this)}
+                                dropdownClassName={styles.dropdown}
+                            >
+                                <Input prefix={<Icon type='user' />} placeholder='用户名/邮箱' onFocus={handleMessage.bind(message)}/>
+                            </AutoComplete>
                         )
                     }
                 </FormItem>
@@ -61,7 +106,7 @@ class LoginForm extends Component {
                                 message: '请输入密码'
                             }]
                         })(
-                            <Input prefix={<Icon type='lock' />} type='password' placeholder='密码' />
+                            <Input prefix={<Icon type='lock' />} type='password' placeholder='密码' onFocus={handleMessage.bind(message)}/>
                         )
                     }
                 </FormItem>

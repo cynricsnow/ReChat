@@ -26,6 +26,10 @@
     padding: 15px;
 }
 
+.dropdown :global(.ant-select-dropdown-menu-item) {
+  padding-left: 25px;
+}
+
 .button {
     padding-top: 8px;
     padding-bottom: 8px;
