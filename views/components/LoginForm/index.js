@@ -8,6 +8,8 @@ import { login, messageExpired } from '../../redux/actions/account';
 import styles from '../LoginRegisterForm/styles';
 import logo from './login-logo.png';
 
+let timeoutId = null;
+
 @connect(
     state => ({
         message: state.account.message
@@ -15,10 +17,20 @@ import logo from './login-logo.png';
     dispatch => ({
         handleSubmit(e) {
             e.preventDefault();
-            const { validateFieldsAndScroll } = this;
+            const { validateFieldsAndScroll } = this.props.form;
+            if (this.props.message) {
+                return;
+            }
             validateFieldsAndScroll((err, values) => {
                 if (!err) {
-                    dispatch(login(values));
+                    this.setState({ login: true });
+                    function loginReq () {
+                        dispatch(login(values)).catch(error => {
+                            this.setState({ login: false })
+                        })
+                    }
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(loginReq.bind(this), 2000)
                 }
             })
         },
@@ -32,7 +44,8 @@ import logo from './login-logo.png';
 class LoginForm extends Component {
     state = {
         dataSource: [],
-        avatarUrl: logo
+        avatarUrl: logo,
+        login: false
     }
     componentDidMount() {
         let users = [];
@@ -63,13 +76,13 @@ class LoginForm extends Component {
         }
     }
     render() {
-        const { dataSource, avatarUrl } = this.state;
+        const { dataSource, avatarUrl, login } = this.state;
         const { message, handleSubmit, handleMessage } = this.props;
         const form = this.props.form;
         const { getFieldDecorator } = form;
         return (
-            <Form onSubmit={handleSubmit.bind(form)}>
-                <Row className={styles.header}>
+            <Form onSubmit={handleSubmit.bind(this)}>
+                <Row className={(login ? styles.login + ' ' : '') + styles.header}>
                     <Col span={8}>
                         <div className={styles.blueCircle}>
                             <img className={styles.logo} src={avatarUrl} />
@@ -113,7 +126,7 @@ class LoginForm extends Component {
                 <div className={styles.hint}>
                     { message }
                 </div>
-                <Button type="primary" htmlType="submit" className={styles.button}>登陆</Button>
+                <Button type="primary" htmlType="submit" loading={login} className={styles.button}>登陆</Button>
             </Form>
         )
     }

@@ -6,12 +6,18 @@
 .header h1 {
     margin-top: 22px;
     font-family: 'Times New Roman', NSimSun;
+    transition: 1s linear;
 }
 
 .blueCircle {
     display: inline-block;
     background: -webkit-gradient(radial, 40 40, 30, 40 40, 40, from(white), color-stop(0.9, rgb(0, 204, 255)), to(rgba(255, 255, 255, 0)));
     background: -moz-radial-gradient(white 50%, rgb(0, 204, 255) 68%, rgba(255, 255, 255, 0) 70%);
+    transition: 1s linear;
+}
+
+.login .blueCircle {
+    transform: translate(108px, 0);
 }
 
 .yellowCircle {
@@ -24,6 +30,11 @@
     width: 80px;
     height: 80px;
     padding: 15px;
+}
+
+
+.login h1 {
+    color: transparent;
 }
 
 .dropdown :global(.ant-select-dropdown-menu-item) {
