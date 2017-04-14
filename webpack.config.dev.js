@@ -2,6 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
     context: `${__dirname}/views`,
+    devtool: 'source-map',
     entry: {
         main: [
             'webpack-hot-middleware/client',
@@ -37,7 +38,8 @@ module.exports = {
                 include: /components/,
                 use: [
                     'style-loader',
-                    'css-loader?modules'
+                    'css-loader?modules&localIdentName=[name]_[local]_[hash:base64:5]',
+                    'postcss-loader'
                 ]
             },
             {
