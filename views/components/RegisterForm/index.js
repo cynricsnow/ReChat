@@ -24,7 +24,7 @@ import logo from './register-logo.png';
             })
         },
         checkUsername(rule, value, callback) {
-            const pattern = /^[\w\d]+$/;
+            const pattern = /^\w+$/;
             if (value && value.length >= 3 && pattern.test(value)) {
                 const validatePromise = ajax.get('/api/account/check_username', {
                     username: value
@@ -111,7 +111,7 @@ class RegisterForm extends Component {
                                 min: 3,
                                 message: '用户名不得少于3个字符'
                             }, {
-                                pattern: /^[\w\d]+$/,
+                                pattern: /^\w+$/,
                                 message: '用户名包含非法字符'
                             }, {
                                 validator: checkUsername

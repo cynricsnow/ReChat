@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route } from 'react-router-dom';
-import createBrowserHistory from 'history/createBrowserHistory'
+import { createBrowserHistory } from 'history'
 
 import moment from 'moment';
 moment.locale('zh-CN');
@@ -21,7 +21,7 @@ const history = createBrowserHistory()
 const router = (
     <Provider store={store}>
         <Router history={history}>
-            <Route path='/' component={App}/>
+            <Route path='/' component={App} />
         </Router>
     </Provider>
 );

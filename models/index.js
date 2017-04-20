@@ -5,8 +5,10 @@ const message = require('./message');
 const group = require('./group');
 const notice = require('./notice');
 
+const config = require('../config');
+
 mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/ReChat');
+mongoose.connect(config.mongo.url);
 
 const User = mongoose.model('User', user);
 const Message = mongoose.model('Message', message);

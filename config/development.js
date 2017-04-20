@@ -3,7 +3,7 @@ module.exports = {
         url: 'mongodb://localhost/ReChat'
     },
     morgan: {
-        format: 'combined'
+        format: 'dev'
     },
     cookie: {
         secret: 'ReChat'
